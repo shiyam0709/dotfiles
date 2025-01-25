@@ -1,0 +1,7 @@
+[opener]
+play = [
+	{ run = 'vlc "$@"', orphan = true, for = "unix" },
+]
+edit = [
+	{ run = '${EDITOR:-vim} "$@"', block = true, for = "unix" },
+]
