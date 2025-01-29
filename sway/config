@@ -1,0 +1,122 @@
+default_border none
+exec swaybg -i ~/wallhaven-8x16mo.png
+
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+
+exec swayidle -w \
+          timeout 150 'brightnessctl -sd asus::kbd_backlight s 0' resume 'brightnessctl -rd asus::kbd_backlight' \
+          timeout 300 'brightnessctl -s s 1%' resume 'brightnessctl -r' \
+          timeout 450 'swaylock -C ~/.config/sway/swaylock/config' \
+          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+          timeout 900 'systemctl suspend' \
+          before-sleep 'swaylock -C ~/.config/sway/swaylock/config'
+
+### Input configuration
+   input "1267:12729:ASUE140D:00_04F3:31B9_Touchpad" {
+#       dwt enabled
+       tap enabled
+       natural_scroll enabled
+#       middle_emulation enabled
+   }
+
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+
+bindsym $mod+t exec kitty
+bindsym $mod+c kill
+bindsym $mod+r exec rofi -show drun
+bindsym $mod+b exec ~/.config/hypr/scripts/battery_status.sh
+bindsym $mod+d exec ~/.config/hypr/scripts/datetime.sh
+bindsym $mod+v exec ~/.config/hypr/scripts/volume_brightness.sh
+bindsym $mod+n exec swaync-client -t
+bindsym $mod+Shift+n exec ~/.config/hypr/scripts/network_status.sh
+bindsym $mod+Alt+l exec swaylock -C ~/.config/sway/swaylock/config
+bindsym $mod+Alt+s exec systemctl suspend
+bindsym $mod+Alt+h exec systemctl hibernate
+bindsym $mod+Alt+p exec shutdown now
+bindsym $mod+Alt+r exec reboot
+bindsym $mod+Shift+c reload
+bindsym $mod+x exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+    # Move the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+    # Switch to workspace
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
+    # Move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+    bindsym $mod+f fullscreen
+
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+#
+# Utilities:
+#
+    # Special keys to adjust volume via PulseAudio
+    bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+    bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -2%
+    bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +2%
+    bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+    # Special keys to adjust brightness via brightnessctl
+    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 1%-
+    bindsym --locked XF86MonBrightnessUp exec brightnessctl set 1%+
+    # Special key to take a screenshot with grim
+    bindsym Print exec grim
+
+include /etc/sway/config.d/*
